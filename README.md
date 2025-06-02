@@ -65,17 +65,18 @@ This section includes complex SQL queries used to solve real-world business prob
 
 1) Find the Different Payment Methods, Number of Transactions, and Quantity Sold
 
+```
 select 
 payment_method,count(*) as no_payments,
 sum(quantity) as no_of_sold
 from walmart
 group by payment_method
-
+```
 
 ⸻
 
 2) Identify the Highest-Rated Category in Each Branch, Displaying the Branch, Category, and Average Rating
-
+```
 select *
 from
 ( select 
@@ -88,11 +89,11 @@ group by 1,2
 )
 where rank =1
 
-
+```
 ⸻
 
 3) Identify the Branch Where It Has the Highest Number of Transactions
-
+```
 select *
 from
 (select
@@ -105,22 +106,22 @@ group by 1,2
 )
 where rank =1
 
-
+```
 ⸻
 
 4) Calculate Total Quantity of Items Sold per Payment Method. List Payment Method and Total Quantity
-
+```
 select 
 payment_method,count(*) as no_payments,
 sum(quantity) as no_of_sold
 from walmart
 group by payment_method
 
-
+```
 ⸻
 
 5) Determine the Avg, Min, and Max Rating of Category for Each City
-
+```
 select 
 city,category,
 min(rating) as min_rating,
@@ -130,11 +131,11 @@ from walmart
 group by 1,2
 order by 1,2 desc;
 
-
+```
 ⸻
 
 6) Calculate the Total Profit for Each Category by Considering Total Profit as (unit_price * quantity * profit_margin)
-
+```
 select 
 category,
 sum(total) as total_revenue,
@@ -142,11 +143,11 @@ sum(total * profit_margin) as profit
 from walmart
 group by 1
 
-
+```
 ⸻
 
 7) Determine the Most Common Payment Method for Each Branch
-
+```
 with cte
 as
 (select
@@ -161,11 +162,11 @@ select *
 from cte
 where rank = 1
 
-
+```
 ⸻
 
 8) Categorize Sales into Morning, Afternoon, and Evening; Find Orders per Shift
-
+```
 SELECT
     branch,
     CASE 
@@ -178,11 +179,11 @@ FROM walmart
 GROUP BY 1,2
 ORDER BY 1,3 DESC;
 
-
+```
 ⸻
 
 9) Identify 5 Branches with the Highest Decrease Ratio in Revenue Compared to Last Year (2023 vs 2022)
-
+```
 SELECT *,
 EXTRACT(YEAR FROM TO_DATE(date, 'DD/MM/YY')) as formated_date
 FROM walmart
@@ -228,7 +229,7 @@ WHERE
 ORDER BY 4 DESC
 LIMIT 5
 
-
+```
 ⸻
 
 Let me know if you want this exported to Markdown or used in a Jupyter Notebook!
