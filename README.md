@@ -63,10 +63,9 @@ sum(quantity) as no_of_sold
 from walmart
 group by payment_method
 ```
-
-     - 2) identify the highest-rated category in each branch,displaying the branch,category,avg rating
-     ```sql
-     select *
+- 2) identify the highest-rated category in each branch,displaying the branch,category,avg rating
+```sql
+select *
 from
 ( select 
 branch,
