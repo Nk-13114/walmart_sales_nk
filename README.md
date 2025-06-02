@@ -65,7 +65,7 @@ This section includes complex SQL queries used to solve real-world business prob
 
 1) Find the Different Payment Methods, Number of Transactions, and Quantity Sold
 
-```
+```sql
 select 
 payment_method,count(*) as no_payments,
 sum(quantity) as no_of_sold
@@ -76,7 +76,7 @@ group by payment_method
 ⸻
 
 2) Identify the Highest-Rated Category in Each Branch, Displaying the Branch, Category, and Average Rating
-```
+```sql
 select *
 from
 ( select 
@@ -93,7 +93,7 @@ where rank =1
 ⸻
 
 3) Identify the Branch Where It Has the Highest Number of Transactions
-```
+```sql
 select *
 from
 (select
@@ -110,7 +110,7 @@ where rank =1
 ⸻
 
 4) Calculate Total Quantity of Items Sold per Payment Method. List Payment Method and Total Quantity
-```
+```sql
 select 
 payment_method,count(*) as no_payments,
 sum(quantity) as no_of_sold
@@ -121,7 +121,7 @@ group by payment_method
 ⸻
 
 5) Determine the Avg, Min, and Max Rating of Category for Each City
-```
+```sql
 select 
 city,category,
 min(rating) as min_rating,
@@ -135,7 +135,7 @@ order by 1,2 desc;
 ⸻
 
 6) Calculate the Total Profit for Each Category by Considering Total Profit as (unit_price * quantity * profit_margin)
-```
+```sql
 select 
 category,
 sum(total) as total_revenue,
@@ -147,7 +147,7 @@ group by 1
 ⸻
 
 7) Determine the Most Common Payment Method for Each Branch
-```
+```sql
 with cte
 as
 (select
@@ -166,7 +166,7 @@ where rank = 1
 ⸻
 
 8) Categorize Sales into Morning, Afternoon, and Evening; Find Orders per Shift
-```
+```sql
 SELECT
     branch,
     CASE 
@@ -183,7 +183,7 @@ ORDER BY 1,3 DESC;
 ⸻
 
 9) Identify 5 Branches with the Highest Decrease Ratio in Revenue Compared to Last Year (2023 vs 2022)
-```
+```sql
 SELECT *,
 EXTRACT(YEAR FROM TO_DATE(date, 'DD/MM/YY')) as formated_date
 FROM walmart
