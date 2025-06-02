@@ -64,7 +64,20 @@ from walmart
 group by payment_method
 ```
 
-     - Identifying best-selling product categories.
+     - 2) identify the highest-rated category in each branch,displaying the branch,category,avg rating
+     ```sql
+     select *
+from
+( select 
+branch,
+category,
+avg(rating) as avg_rating,
+rank() over(partition by branch order by avg(rating) desc) as rank
+from walmart
+group by 1,2
+)
+where rank =1
+```
      - Sales performance by time, city, and payment method.
      - Analyzing peak sales periods and customer buying patterns.
      - Profit margin analysis by branch and category.
