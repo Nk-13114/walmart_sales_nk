@@ -53,18 +53,29 @@ This project is an end-to-end data analysis solution designed to extract critica
    - **Table Creation**: Set up tables in both MySQL and PostgreSQL using Python SQLAlchemy to automate table creation and data insertion.
    - **Verification**: Run initial SQL queries to confirm that the data has been loaded accurately.
 
-### 9. SQL Analysis: Complex Queries and Business Problem Solving
-   - **Business Problem-Solving**: Write and execute complex SQL queries to answer critical business questions, such as:
-----find the different payment method and no of transactions,no of qty sold
-```sql
+Got it! Here’s your README section with your exact SQL code, cleanly formatted and organized—no changes to logic or queries, just structured neatly for GitHub:
+
+⸻
+
+9. SQL Analysis: Complex Queries and Business Problem Solving
+
+This section includes complex SQL queries used to solve real-world business problems using the Walmart dataset.
+
+⸻
+
+1) Find the Different Payment Methods, Number of Transactions, and Quantity Sold
+
 select 
 payment_method,count(*) as no_payments,
 sum(quantity) as no_of_sold
 from walmart
 group by payment_method
-```
----identify the highest-rated category in each branch,displaying the branch,category,avg rating
-```sql
+
+
+⸻
+
+2) Identify the Highest-Rated Category in Each Branch, Displaying the Branch, Category, and Average Rating
+
 select *
 from
 ( select 
@@ -76,10 +87,151 @@ from walmart
 group by 1,2
 )
 where rank =1
-```
-     - Sales performance by time, city, and payment method.
-     - Analyzing peak sales periods and customer buying patterns.
-     - Profit margin analysis by branch and category.
+
+
+⸻
+
+3) Identify the Branch Where It Has the Highest Number of Transactions
+
+select *
+from
+(select
+branch,
+to_char(to_date(date,'DD/MM/YY'),'day') as format_date,
+count(*) as no_trans,
+rank() over(partition by branch order by count(*) desc) as rank
+from walmart
+group by 1,2
+)
+where rank =1
+
+
+⸻
+
+4) Calculate Total Quantity of Items Sold per Payment Method. List Payment Method and Total Quantity
+
+select 
+payment_method,count(*) as no_payments,
+sum(quantity) as no_of_sold
+from walmart
+group by payment_method
+
+
+⸻
+
+5) Determine the Avg, Min, and Max Rating of Category for Each City
+
+select 
+city,category,
+min(rating) as min_rating,
+max(rating) as max_raing,
+avg(rating) as avg_rating
+from walmart
+group by 1,2
+order by 1,2 desc;
+
+
+⸻
+
+6) Calculate the Total Profit for Each Category by Considering Total Profit as (unit_price * quantity * profit_margin)
+
+select 
+category,
+sum(total) as total_revenue,
+sum(total * profit_margin) as profit
+from walmart
+group by 1
+
+
+⸻
+
+7) Determine the Most Common Payment Method for Each Branch
+
+with cte
+as
+(select
+branch,
+payment_method,
+count(*) as total_tran,
+rank() over(partition by branch order by count(*) desc) as rank
+from walmart
+group by 1,2
+)
+select * 
+from cte
+where rank = 1
+
+
+⸻
+
+8) Categorize Sales into Morning, Afternoon, and Evening; Find Orders per Shift
+
+SELECT
+    branch,
+    CASE 
+        WHEN EXTRACT(HOUR FROM time::time) < 12 THEN 'morning'
+        WHEN EXTRACT(HOUR FROM time::time) BETWEEN 12 AND 17 THEN 'afternoon'
+        ELSE 'evening'
+    END AS day_time,
+    COUNT(*) AS total_orders
+FROM walmart
+GROUP BY 1,2
+ORDER BY 1,3 DESC;
+
+
+⸻
+
+9) Identify 5 Branches with the Highest Decrease Ratio in Revenue Compared to Last Year (2023 vs 2022)
+
+SELECT *,
+EXTRACT(YEAR FROM TO_DATE(date, 'DD/MM/YY')) as formated_date
+FROM walmart
+
+-- 2022 sales
+WITH revenue_2022
+AS
+(
+	SELECT 
+		branch,
+		SUM(total) as revenue
+	FROM walmart
+	WHERE EXTRACT(YEAR FROM TO_DATE(date, 'DD/MM/YY')) = 2022 -- psql
+	-- WHERE YEAR(TO_DATE(date, 'DD/MM/YY')) = 2022 -- mysql
+	GROUP BY 1
+),
+
+revenue_2023
+AS
+(
+	SELECT 
+		branch,
+		SUM(total) as revenue
+	FROM walmart
+	WHERE EXTRACT(YEAR FROM TO_DATE(date, 'DD/MM/YY')) = 2023
+	GROUP BY 1
+)
+
+SELECT 
+	ls.branch,
+	ls.revenue as last_year_revenue,
+	cs.revenue as cr_year_revenue,
+	ROUND(
+		(ls.revenue - cs.revenue)::numeric/
+		ls.revenue::numeric * 100, 
+		2) as rev_dec_ratio
+FROM revenue_2022 as ls
+JOIN
+revenue_2023 as cs
+ON ls.branch = cs.branch
+WHERE 
+	ls.revenue > cs.revenue
+ORDER BY 4 DESC
+LIMIT 5
+
+
+⸻
+
+Let me know if you want this exported to Markdown or used in a Jupyter Notebook!
    - **Documentation**: Keep clear notes of each query's objective, approach, and results.
 
 ### 10. Project Publishing and Documentation
